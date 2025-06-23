@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bach: Jesu, Joy of Man's Desiring - Organ Performance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e6e6e6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(10, 15, 35, 0.85);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(80, 120, 200, 0.2);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, #e6d3a7, #d4b483);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a7c7e7;
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+
+        .organ-display {
+            height: 250px;
+            background: linear-gradient(to bottom, #0c0c1a 0%, #1a1a2e 100%);
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(120, 150, 200, 0.15);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7);
+        }
+
+        .organ-pipes {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .pipe {
+            width: 30px;
+            background: linear-gradient(to right, #2c2c4c 0%, #3a3a5a 50%, #2c2c4c 100%);
+            border-radius: 4px 4px 0 0;
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.3);
+            transform-origin: bottom;
+            transition: transform 0.1s ease;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 1.8rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4a6fa5 0%, #2c4a78 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #5a7fb5 0%, #3c5a98 100%);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn i {
+            font-size: 1.4rem;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #a54a6f 0%, #782c4a 100%);
+        }
+
+        .btn-stop:hover {
+            background: linear-gradient(135deg, #b55a7f 0%, #983c5a 100%);
+        }
+
+        .performance-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.8rem;
+            padding: 1.2rem;
+            background: rgba(20, 25, 55, 0.6);
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .info-value {
+            font-size: 1.4rem;
+            font-weight: 300;
+            color: #d4b483;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #a7c7e7;
+            margin-top: 5px;
+        }
+
+        footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #a7c7e7;
+            opacity: 0.8;
+        }
+
+        .visualizer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: rgba(20, 40, 80, 0.2);
+            border-top: 1px solid rgba(100, 140, 200, 0.1);
+        }
+
+        .sound-wave {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 10px;
+        }
+
+        .wave-bar {
+            flex: 1;
+            background: rgba(100, 180, 255, 0.4);
+            margin: 0 2px;
+            border-radius: 2px 2px 0 0;
+            min-height: 2px;
+            transition: height 0.1s ease;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            .performance-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Jesu, Joy of Man's Desiring</h1>
+            <div class="subtitle">BWV 147 - Johann Sebastian Bach</div>
+        </header>
+
+        <div class="organ-display">
+            <div class="organ-pipes" id="organPipes">
+            </div>
+            <div class="visualizer">
+                <div class="sound-wave" id="soundWave">
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="playBtn">
+                <i>▶</i> Play Performance
+            </button>
+            <button class="btn btn-stop" id="stopBtn">
+                <i>⏹</i> Stop
+            </button>
+        </div>
+
+        <div class="performance-info">
+            <div class="info-item">
+                <div class="info-value" id="tempoValue">72</div>
+                <div class="info-label">Tempo (BPM)</div>
+            </div>
+            <div class="info-item">
+                <div class="info-value" id="durationValue">26s</div>
+                <div class="info-label">Duration</div>
+            </div>
+            <div class="info-item">
+                <div class="info-value" id="stopsValue">III</div>
+                <div class="info-label">Registration</div>
+            </div>
+        </div>
+
+        <footer>
+            Authentic pipe organ simulation using Web Audio API
+        </footer>
+    </div>
+
+    <script>
+
+        const organPipes = document.getElementById('organPipes');
+        for (let i = 0; i < 15; i++) {
+            const pipe = document.createElement('div');
+            pipe.className = 'pipe';
+            const height = 40 + Math.random() * 180;
+            pipe.style.height = `${height}px`;
+            pipe.style.opacity = 0.7 + Math.random() * 0.3;
+            organPipes.appendChild(pipe);
+        }
+
+
+        const soundWave = document.getElementById('soundWave');
+        for (let i = 0; i < 60; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'wave-bar';
+            soundWave.appendChild(bar);
+        }
+
+
+        let audioContext;
+        let isPlaying = false;
+        let animationFrame;
+        const waveBars = document.querySelectorAll('.wave-bar');
+        const organPipesElements = document.querySelectorAll('.pipe');
+
+        function playOrganJesu() {
+            if (isPlaying) return;
+            isPlaying = true;
+
+
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            const now = audioContext.currentTime;
+
+            const masterGain = audioContext.createGain();
+            masterGain.gain.setValueAtTime(0, now);
+            masterGain.gain.linearRampToValueAtTime(1, now + 3);
+            masterGain.connect(audioContext.destination);
+
+            const reverb = audioContext.createConvolver();
+            const reverbGain = audioContext.createGain();
+            reverbGain.gain.value = 0.42;
+            reverbGain.connect(masterGain);
+
+            const impulseLength = audioContext.sampleRate * 3.5;
+            const impulseBuffer = audioContext.createBuffer(2, impulseLength, audioContext.sampleRate);
+            for (let ch = 0; ch < 2; ch++) {
+                const data = impulseBuffer.getChannelData(ch);
+                for (let i = 0; i < impulseLength; i++) {
+                    const progress = i / impulseLength;
+                    const decay = Math.pow(1 - progress, 3.5);
+                    data[i] = (Math.random() * 2 - 1) * decay;
+                }
+            }
+            reverb.buffer = impulseBuffer;
+            reverb.connect(reverbGain);
+
+            function playOrganNote(freq, startTime, duration, velocity = 0.7, pipeIndex = 0) {
+                // Principal 8' (core tone)
+                const principal = audioContext.createOscillator();
+                principal.type = "sine";
+                principal.frequency.value = freq;
+
+                // Octave 4' (adds brilliance)
+                const octave = audioContext.createOscillator();
+                octave.type = "sine";
+                octave.frequency.value = freq * 2;
+
+                // Quint 2 2/3' (harmonic richness)
+                const quint = audioContext.createOscillator();
+                quint.type = "sine";
+                quint.frequency.value = freq * 1.5;
+
+
+                const createGain = (vel) => {
+                    const gain = audioContext.createGain();
+                    gain.gain.setValueAtTime(0.001, startTime);
+
+                    // Gentle pipe speech development (0.22s)
+                    gain.gain.linearRampToValueAtTime(vel, startTime + 0.22);
+
+                    // Natural decay (last 0.6s of note)
+                    gain.gain.setValueAtTime(vel, startTime + duration - 0.6);
+                    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                    return gain;
+                };
+
+                const principalGain = createGain(velocity);
+                const octaveGain = createGain(velocity * 0.58);
+                const quintGain = createGain(velocity * 0.38);
+
+                // Connect and play
+                principal.connect(principalGain);
+                octave.connect(octaveGain);
+                quint.connect(quintGain);
+
+                principalGain.connect(reverb);
+                octaveGain.connect(reverb);
+                quintGain.connect(reverb);
+
+                principal.start(startTime);
+                octave.start(startTime);
+                quint.start(startTime);
+
+                principal.stop(startTime + duration);
+                octave.stop(startTime + duration);
+                quint.stop(startTime + duration);
+
+                // Animate pipe when note plays
+                if (organPipesElements[pipeIndex]) {
+                    const pipe = organPipesElements[pipeIndex];
+                    pipe.style.transform = 'scaleY(1.08)';
+                    setTimeout(() => {
+                        pipe.style.transform = 'scaleY(1)';
+                    }, 200);
+                }
+            }
+
+            // Complete melody with authentic phrasing and timing
+            const melody = [
+                // Phrase 1
+                { freq: 392.00, time: 0.0, dur: 1.0, vel: 0.75, pipe: 1 },   // G4
+                { freq: 440.00, time: 1.0, dur: 0.5, vel: 0.8, pipe: 2 },      // A4
+                { freq: 493.88, time: 1.5, dur: 0.5, vel: 0.78, pipe: 3 },     // B4
+                { freq: 523.25, time: 2.0, dur: 0.5, vel: 0.8, pipe: 4 },      // C5
+                { freq: 587.33, time: 2.5, dur: 0.5, vel: 0.82, pipe: 5 },     // D5
+                { freq: 523.25, time: 3.0, dur: 0.5, vel: 0.78, pipe: 4 },     // C5
+                { freq: 493.88, time: 3.5, dur: 0.5, vel: 0.75, pipe: 3 },     // B4
+                { freq: 440.00, time: 4.0, dur: 1.0, vel: 0.72, pipe: 2 },     // A4
+
+                // Phrase 2
+                { freq: 392.00, time: 5.0, dur: 0.5, vel: 0.7, pipe: 1 },      // G4
+                { freq: 440.00, time: 5.5, dur: 0.5, vel: 0.75, pipe: 2 },     // A4
+                { freq: 493.88, time: 6.0, dur: 1.0, vel: 0.77, pipe: 3 },     // B4
+                { freq: 523.25, time: 7.0, dur: 0.5, vel: 0.8, pipe: 4 },      // C5
+                { freq: 587.33, time: 7.5, dur: 0.5, vel: 0.82, pipe: 5 },     // D5
+                { freq: 523.25, time: 8.0, dur: 0.5, vel: 0.78, pipe: 4 },     // C5
+                { freq: 493.88, time: 8.5, dur: 0.5, vel: 0.75, pipe: 3 },     // B4
+                { freq: 440.00, time: 9.0, dur: 1.0, vel: 0.72, pipe: 2 },     // A4
+
+                // Phrase 3
+                { freq: 523.25, time: 10.0, dur: 0.5, vel: 0.78, pipe: 4 },    // C5
+                { freq: 659.25, time: 10.5, dur: 0.5, vel: 0.8, pipe: 6 },     // E5
+                { freq: 783.99, time: 11.0, dur: 1.0, vel: 0.82, pipe: 7 },    // G5
+                { freq: 698.46, time: 12.0, dur: 0.5, vel: 0.8, pipe: 8 },     // F5
+                { freq: 880.00, time: 12.5, dur: 0.5, vel: 0.82, pipe: 9 },    // A5
+                { freq: 698.46, time: 13.0, dur: 0.5, vel: 0.78, pipe: 8 },    // F5
+                { freq: 659.25, time: 13.5, dur: 0.5, vel: 0.75, pipe: 6 },    // E5
+                { freq: 587.33, time: 14.0, dur: 1.0, vel: 0.72, pipe: 5 },    // D5
+
+                // Phrase 4
+                { freq: 523.25, time: 15.0, dur: 0.5, vel: 0.75, pipe: 4 },    // C5
+                { freq: 493.88, time: 15.5, dur: 0.5, vel: 0.72, pipe: 3 },    // B4
+                { freq: 440.00, time: 16.0, dur: 1.0, vel: 0.7, pipe: 2 },     // A4
+                { freq: 392.00, time: 17.0, dur: 0.5, vel: 0.68, pipe: 1 },    // G4
+                { freq: 440.00, time: 17.5, dur: 0.5, vel: 0.7, pipe: 2 },     // A4
+                { freq: 493.88, time: 18.0, dur: 0.5, vel: 0.72, pipe: 3 },    // B4
+                { freq: 523.25, time: 18.5, dur: 0.5, vel: 0.75, pipe: 4 },    // C5
+                { freq: 493.88, time: 19.0, dur: 1.5, vel: 0.7, pipe: 3 },     // B4 (fermata)
+            ];
+
+            // Pedal bass (16' stops)
+            const pedalBass = [
+                { freq: 98.00, time: 0.0, dur: 2.0, vel: 0.45, pipe: 10 },    // G2
+                { freq: 110.00, time: 2.0, dur: 2.0, vel: 0.47, pipe: 11 },    // A2
+                { freq: 123.47, time: 4.0, dur: 2.0, vel: 0.43, pipe: 12 },    // B2
+                { freq: 110.00, time: 6.0, dur: 2.0, vel: 0.45, pipe: 11 },    // A2
+                { freq: 130.81, time: 8.0, dur: 2.0, vel: 0.48, pipe: 13 },    // C3
+                { freq: 87.31, time: 10.0, dur: 2.0, vel: 0.42, pipe: 14 },    // F2
+                { freq: 130.81, time: 12.0, dur: 2.0, vel: 0.46, pipe: 13 },   // C3
+                { freq: 98.00, time: 14.0, dur: 2.0, vel: 0.44, pipe: 10 },    // G2
+                { freq: 87.31, time: 16.0, dur: 2.0, vel: 0.4, pipe: 14 },     // F2
+                { freq: 98.00, time: 18.0, dur: 3.0, vel: 0.42, pipe: 10 }     // G2
+            ];
+
+            // Play with cathedral ambiance
+            melody.forEach(note => playOrganNote(note.freq, now + note.time, note.dur, note.vel, note.pipe));
+            pedalBass.forEach(note => playOrganNote(note.freq, now + note.time, note.dur, note.vel, note.pipe));
+
+            // Update visualizer animation
+            function updateVisualizer() {
+                if (!isPlaying) return;
+
+                // Random wave animation
+                waveBars.forEach(bar => {
+                    const height = 5 + Math.random() * 95;
+                    bar.style.height = `${height}%`;
+                });
+
+                animationFrame = requestAnimationFrame(updateVisualizer);
+            }
+
+            updateVisualizer();
+        }
+
+        // Button event handlers
+        function setStopButtonVisible(visible) {
+            const stopBtn = document.getElementById('stopBtn');
+            stopBtn.style.display = visible ? 'flex' : 'none';
+        }
+
+        // On page load, hide stop button
+        setStopButtonVisible(false);
+
+        document.getElementById('playBtn').addEventListener('click', () => {
+            playOrganJesu();
+            document.getElementById('playBtn').textContent = '▶ Performance Playing';
+            setStopButtonVisible(true);
+        });
+
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            isPlaying = false;
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+            }
+            // Reset sound wave bars
+            waveBars.forEach(bar => {
+                bar.style.height = '5%';
+            });
+            document.getElementById('playBtn').textContent = '▶ Play Performance';
+            setStopButtonVisible(false);
+        });
+    </script>
+</body>
+
+</html>
